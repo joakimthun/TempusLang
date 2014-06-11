@@ -8,6 +8,6 @@ namespace Commons.AST
 {
     public class IntegerLiteralExpression : Expression
     {
-        public string Value { get; set; }
+        public int Value { get; set; }
     }
 }

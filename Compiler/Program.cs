@@ -172,6 +172,27 @@ namespace Compiler
             var programParser = new TempusParser(program);
             var programAst = programParser.ParseStatements();
             var codeGenerator = new CodeGenerator(programAst, "Tempus1.exe");
+
+            var program2 = new List<Token> 
+            {
+                new Token { Type = TokenType.Var, Value = "var" },
+                new Token { Type = TokenType.Identifier, Value = "myString" },
+                new Token { Type = TokenType.Assignment, Value = "=" },
+                new Token { Type = TokenType.StringLiteral, Value = "Hello World!" },
+                new Token { Type = TokenType.Loop, Value = "loop" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "10" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.PrinLn, Value = "println" },
+                new Token { Type = TokenType.Identifier, Value = "myString" },
+                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.EOF },
+            };
+
+            var programParser2 = new TempusParser(program2);
+            var programAst2 = programParser2.ParseStatements();
+            var codeGenerator2 = new CodeGenerator(programAst2, "Tempus2.exe");
         }
     }
 }

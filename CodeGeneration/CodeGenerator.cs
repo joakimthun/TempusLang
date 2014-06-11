@@ -37,7 +37,7 @@ namespace CodeGeneration
             _ilGenerator = methodBuilder.GetILGenerator();
             _symbolTable = new Dictionary<string, LocalBuilder>();
 
-            GenerateIL(program);
+            CompileStatements(program);
 
             _ilGenerator.Emit(OpCodes.Call, typeof(System.Console).GetMethod(SystemConsoleReadLine, BindingFlags.Public | BindingFlags.Static, null, new Type[] { }, null));
             _ilGenerator.Emit(OpCodes.Ret);
@@ -47,9 +47,9 @@ namespace CodeGeneration
             assemblyBuilder.Save(moduleName);
         }
 
-        private void GenerateIL(IEnumerable<Expression> program)
+        private void CompileStatements(IEnumerable<Expression> statements)
         {
-            foreach (var statement in program)
+            foreach (var statement in statements)
             {
                 CompileStatement(statement);
             }
@@ -80,6 +80,34 @@ namespace CodeGeneration
                 var printLineExpression = (PrintLineExpression)statement;
                 CompileExpression(printLineExpression.Expression, typeof(string));
                 _ilGenerator.Emit(OpCodes.Call, typeof(System.Console).GetMethod(SystemConsoleWriteLine, new Type[] { typeof(string) }));
+            }
+            else if(statement is LoopExpression)
+            {
+                var loopExpression = (LoopExpression)statement;
+
+                //Create an index variable
+                var loopIndexExpression = GenerateLoopIndexExpression();
+                CompileStatement(loopIndexExpression);
+
+                var test = _ilGenerator.DefineLabel();
+                _ilGenerator.Emit(OpCodes.Br, test);
+
+                var loopBody = _ilGenerator.DefineLabel();
+                _ilGenerator.MarkLabel(loopBody);
+                CompileStatements(loopExpression.Body);
+                
+                //Increment the index variable by 1
+                _ilGenerator.Emit(OpCodes.Ldloc, _symbolTable[loopIndexExpression.Identifier]);
+                _ilGenerator.Emit(OpCodes.Ldc_I4, 1);
+                _ilGenerator.Emit(OpCodes.Add);
+                StoreLocal(loopIndexExpression.Identifier, typeof(int));
+
+                _ilGenerator.MarkLabel(test);
+                _ilGenerator.Emit(OpCodes.Ldloc, _symbolTable[loopIndexExpression.Identifier]);
+                CompileExpression(loopExpression.IterationExpression, typeof(int));
+
+                //Jump to the loopBody label if the loopIndex is less then the iteration expression.
+                _ilGenerator.Emit(OpCodes.Blt, loopBody);
             }
             else
             {
@@ -162,6 +190,14 @@ namespace CodeGeneration
             {
                 throw new CodeGenerationException(string.Format("Unknown type: {0}", expression.GetType().Name));
             }
+        }
+
+        private VariableDeclarationExpression GenerateLoopIndexExpression()
+        {
+            var variableDeclarationExpression = new VariableDeclarationExpression();
+            variableDeclarationExpression.Identifier = "index";
+            variableDeclarationExpression.Expression = new IntegerLiteralExpression { Value = 0 };
+            return variableDeclarationExpression;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Parsing.Parselets
     {
         public override Expression Parse(Parser parser, Token token)
         {
-            var integerLiteralExpression = new IntegerLiteralExpression { Value = token.Value };
+            var integerLiteralExpression = new IntegerLiteralExpression { Value = int.Parse(token.Value) };
             parser.Consume();
 
             return integerLiteralExpression;
