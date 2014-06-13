@@ -39,12 +39,14 @@ namespace Parsing.Parselets
 
             parser.Consume();
 
-            loopExpression.Body = parser.ParseStatements();
+            loopExpression.Body = parser.ParseStatements(TokenType.Right_Bracket);
 
             if (!parser.Match(TokenType.Right_Bracket))
             {
                 throw new ParsingException(string.Format("Expected closing bracket, found: {0}", parser.Lookahead.Type));
             }
+
+            parser.Consume();
 
             return loopExpression;
         }

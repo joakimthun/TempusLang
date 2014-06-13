@@ -15,7 +15,8 @@ namespace Parsing
         private List<Token> _tokens;
         private readonly Dictionary<TokenType, PrefixParselet> _prefixParselets;
         private readonly Dictionary<TokenType, InfixParselet> _infixParselets;
-        private readonly Dictionary<TokenType, StatementParselet> _statementParselets;
+        private readonly Dictionary<TokenType, StatementParselet> _ll1StatementParselets;
+        private readonly Dictionary<Tuple<TokenType, TokenType>, StatementParselet> _ll2StatementParselets;
 
         private int _index;
 
@@ -27,12 +28,13 @@ namespace Parsing
 
             _prefixParselets = new Dictionary<TokenType, PrefixParselet>();
             _infixParselets = new Dictionary<TokenType, InfixParselet>();
-            _statementParselets = new Dictionary<TokenType, StatementParselet>();
+            _ll1StatementParselets = new Dictionary<TokenType, StatementParselet>();
+            _ll2StatementParselets = new Dictionary<Tuple<TokenType, TokenType>, StatementParselet>();
         }
 
         internal Token Lookahead { get; set; }
 
-        public IEnumerable<Expression> ParseStatements()
+        public IEnumerable<Expression> ParseStatements(TokenType endOfStatementType = TokenType.None)
         {
             var statements = new List<Expression>();
 
@@ -40,7 +42,7 @@ namespace Parsing
 
             while (true)
             {
-                if (Match(TokenType.EOF) || Peek(1).Type == TokenType.EOF)
+                if (Match(endOfStatementType) || Match(TokenType.EOF))
                 {
                     break;
                 }
@@ -92,7 +94,12 @@ namespace Parsing
         internal Expression ParseStatement()
         {
             StatementParselet statementParselet;
-            _statementParselets.TryGetValue(Lookahead.Type, out statementParselet);
+
+            statementParselet = TryGetLl2Parselet(Lookahead.Type, Peek(1).Type);
+
+            if(statementParselet == null)
+                _ll1StatementParselets.TryGetValue(Lookahead.Type, out statementParselet);
+
             if (statementParselet != null)
                 return statementParselet.Parse(this);
 
@@ -134,9 +141,23 @@ namespace Parsing
             _infixParselets.Add(tokenType, parselet);
         }
 
-        protected void RegisterParselet(TokenType tokenType, StatementParselet parselet)
+        protected void RegisterLl1Parselet(TokenType tokenType, StatementParselet parselet)
         {
-            _statementParselets.Add(tokenType, parselet);
+            _ll1StatementParselets.Add(tokenType, parselet);
+        }
+
+        protected void RegisterLl2Parselet(TokenType tokenType1, TokenType tokenType2, StatementParselet parselet)
+        {
+            _ll2StatementParselets.Add(new Tuple<TokenType, TokenType>(tokenType1, tokenType2), parselet);
+        }
+
+        private StatementParselet TryGetLl2Parselet(TokenType tokenType1, TokenType tokenType2)
+        {
+            var key = new Tuple<TokenType, TokenType>(tokenType1, tokenType2);
+            StatementParselet statementParselet;
+            _ll2StatementParselets.TryGetValue(key, out statementParselet);
+
+            return statementParselet;
         }
 
         private int GetPrecedence()

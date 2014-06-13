@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Parselets\BinaryOperatorParselet.cs" />
     <Compile Include="Parselets\AssignmentParselet.cs" />
+    <Compile Include="Parselets\FuncInvocationParselet.cs" />
     <Compile Include="Parselets\StringLiteralParselet.cs" />
     <Compile Include="Parselets\IntegerLiteralParselet.cs" />
     <Compile Include="Parselets\InfixParselet.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Parselets\LoopParselet.cs" />
     <Compile Include="Parselets\ReturnParselet.cs" />
     <Compile Include="Parselets\PrintLineParselet.cs" />
+    <Compile Include="Parselets\PropertyDeclarationParselet.cs" />
     <Compile Include="Parselets\VariableDeclarationParselet.cs" />
     <Compile Include="Parselets\StatementParselet.cs" />
     <Compile Include="Precedence.cs" />

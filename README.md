@@ -1,14 +1,18 @@
-Hello world example:
+Example program:
 ```
-var myString = "Hello world!"
-println myString
-```
+global strField : string
 
-Loop example:
-```
-var myString = "Hello world!"
-loop(10)
+func printField()
 {
-    println myString
+	loop(10)
+	{
+		println strField
+	}
+}
+
+func mainFunc() : main
+{
+	strField = "Hello World!"
+	printField()
 }
 ```

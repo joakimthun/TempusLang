@@ -12,11 +12,14 @@ namespace Parsing
     {
         public TempusParser(List<Token> tokens) : base(tokens)
         {
-            RegisterParselet(TokenType.Var, new VariableDeclarationParselet());
-            RegisterParselet(TokenType.PrinLn, new PrintLineParselet());
-            RegisterParselet(TokenType.Loop, new LoopParselet());
-            RegisterParselet(TokenType.Func, new FuncParselet());
-            RegisterParselet(TokenType.Return, new ReturnParselet());
+            RegisterLl1Parselet(TokenType.Var, new VariableDeclarationParselet());
+            RegisterLl1Parselet(TokenType.PrinLn, new PrintLineParselet());
+            RegisterLl1Parselet(TokenType.Loop, new LoopParselet());
+            RegisterLl1Parselet(TokenType.Func, new FuncParselet());
+            RegisterLl1Parselet(TokenType.Return, new ReturnParselet());
+            RegisterLl1Parselet(TokenType.Global, new PropertyDeclarationParselet());
+
+            RegisterLl2Parselet(TokenType.Identifier, TokenType.Left_Paren, new FuncInvocationParselet());
 
             RegisterParselet(TokenType.Identifier, new IdentifierParselet());
             RegisterParselet(TokenType.IntegerLiteral, new IntegerLiteralParselet());

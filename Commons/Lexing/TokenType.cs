@@ -29,5 +29,7 @@ namespace Commons.Lexing
         Return,
         IntegerLiteral,
         StringLiteral,
+        Global,
+        Main
     }
 }

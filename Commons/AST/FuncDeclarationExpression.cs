@@ -11,5 +11,6 @@ namespace Commons.AST
         public string Name { get; set; }
         public IEnumerable<IdentifierExpression> Arguments { get; set; }
         public IEnumerable<Expression> Body { get; set; }
+        public bool IsMain { get; set; }
     }
 }

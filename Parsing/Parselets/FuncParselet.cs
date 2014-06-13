@@ -57,24 +57,40 @@ namespace Parsing.Parselets
 
             if (!parser.Match(TokenType.Right_Paren))
             {
-                throw new ParsingException(string.Format("Expected opening parentheses, found: {0}", parser.Lookahead.Type));
+                throw new ParsingException(string.Format("Expected closing parentheses, found: {0}", parser.Lookahead.Type));
             }
 
             parser.Consume();
+
+            if (parser.Match(TokenType.Colon))
+            {
+                parser.Consume();
+
+                if (!parser.Match(TokenType.Main))
+                {
+                    throw new ParsingException(string.Format("Expected main method decleration, found: {0}", parser.Lookahead.Type));
+                }
+
+                funcExpression.IsMain = true;
+
+                parser.Consume();
+            }
 
             if (!parser.Match(TokenType.Left_Bracket))
             {
-                throw new ParsingException(string.Format("Expected opening parentheses, found: {0}", parser.Lookahead.Type));
+                throw new ParsingException(string.Format("Expected opening bracket, found: {0}", parser.Lookahead.Type));
             }
 
             parser.Consume();
 
-            funcExpression.Body = parser.ParseStatements();
+            funcExpression.Body = parser.ParseStatements(TokenType.Right_Bracket);
 
             if (!parser.Match(TokenType.Right_Bracket))
             {
                 throw new ParsingException(string.Format("Expected closing bracket, found: {0}", parser.Lookahead.Type));
             }
+
+            parser.Consume();
 
 
             return funcExpression;

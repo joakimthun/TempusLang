@@ -132,6 +132,8 @@ namespace Compiler
                 new Token { Type = TokenType.Comma, Value = "," },
                 new Token { Type = TokenType.Identifier, Value = "arg3" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Colon, Value = ":" },
+                new Token { Type = TokenType.Main, Value = "main" },
                 new Token { Type = TokenType.Left_Bracket, Value = "{" },
                 new Token { Type = TokenType.Var, Value = "var" },
                 new Token { Type = TokenType.Identifier, Value = "a" },
@@ -171,7 +173,7 @@ namespace Compiler
 
             var programParser = new TempusParser(program);
             var programAst = programParser.ParseStatements();
-            var codeGenerator = new CodeGenerator(programAst, "Tempus1.exe");
+            //var codeGenerator = new AssemblyGenerator(programAst, "Tempus1.exe");
 
             var program2 = new List<Token> 
             {
@@ -192,7 +194,83 @@ namespace Compiler
 
             var programParser2 = new TempusParser(program2);
             var programAst2 = programParser2.ParseStatements();
-            var codeGenerator2 = new CodeGenerator(programAst2, "Tempus2.exe");
+            //var codeGenerator2 = new AssemblyGenerator(programAst2, "Tempus2.exe");
+
+            var program3 = new List<Token> 
+            {
+                new Token { Type = TokenType.Global, Value = "global" },
+                new Token { Type = TokenType.Identifier, Value = "myField" },
+                new Token { Type = TokenType.Colon, Value = ":" },
+                new Token { Type = TokenType.Identifier, Value = "string" },
+                new Token { Type = TokenType.Func, Value = "func" },
+                new Token { Type = TokenType.Identifier, Value = "myFunc" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Colon, Value = ":" },
+                new Token { Type = TokenType.Main, Value = "main" },
+                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Identifier, Value = "myField" },
+                new Token { Type = TokenType.Assignment, Value = "=" },
+                new Token { Type = TokenType.StringLiteral, Value = "Hello World From Field!" },
+                new Token { Type = TokenType.Loop, Value = "loop" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "10" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.PrinLn, Value = "println" },
+                new Token { Type = TokenType.Identifier, Value = "myField" },
+                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.EOF },
+            };
+
+            var programParser3 = new TempusParser(program3);
+            var programAst3 = programParser3.ParseStatements();
+            var codeGenerator3 = new AssemblyGenerator(programAst3, "Tempus1.exe");
+
+            var program4 = new List<Token> 
+            {
+                new Token { Type = TokenType.Global, Value = "global" },
+                new Token { Type = TokenType.Identifier, Value = "myField" },
+                new Token { Type = TokenType.Colon, Value = ":" },
+                new Token { Type = TokenType.Identifier, Value = "string" },
+                
+                new Token { Type = TokenType.Func, Value = "func" },
+                new Token { Type = TokenType.Identifier, Value = "printField" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Loop, Value = "loop" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "10" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.PrinLn, Value = "println" },
+                new Token { Type = TokenType.Identifier, Value = "myField" },
+                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+
+                new Token { Type = TokenType.Func, Value = "func" },
+                new Token { Type = TokenType.Identifier, Value = "mainFunc" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Colon, Value = ":" },
+                new Token { Type = TokenType.Main, Value = "main" },
+                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Identifier, Value = "myField" },
+                new Token { Type = TokenType.Assignment, Value = "=" },
+                new Token { Type = TokenType.StringLiteral, Value = "Hello World From Field!" },
+                new Token { Type = TokenType.Identifier, Value = "printField" },
+                new Token { Type = TokenType.Left_Paren, Value = "(" },
+                new Token { Type = TokenType.Right_Paren, Value = ")" },
+                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+
+                new Token { Type = TokenType.EOF },
+            };
+
+            var programParser4 = new TempusParser(program4);
+            var programAst4 = programParser4.ParseStatements();
+            var codeGenerator4 = new AssemblyGenerator(programAst4, "Tempus2.exe");
         }
     }
 }
