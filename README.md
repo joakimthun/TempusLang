@@ -18,7 +18,8 @@ func printInteger()
 
 func main()
 {
-	strField = "Hello World!"
+	strField = 'Hello World!'
 	printField()
+	printInteger()
 }
 ```

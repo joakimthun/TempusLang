@@ -10,5 +10,6 @@ namespace Commons.Lexing
     {
         public TokenType Type { get; set; }
         public string Value { get; set; }
+        public int Index { get; set; }
     }
 }

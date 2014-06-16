@@ -1,22 +1,38 @@
 ﻿using CodeGeneration;
 using Commons.AST;
 using Commons.Lexing;
+using Lexing;
 using Parsing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Compiler
 {
-    class Program
+    class TempusCompiler
     {
+        const string SuperHardCodedFilePath = @"C:\Dev\Tempus\Program.tempus";
+
         static void Main(string[] args)
         {
+            //OldTestStuff();
 
-            #region stuff
+            string input = File.ReadAllText(SuperHardCodedFilePath);
 
+            var lexer = new Lexer(input);
+            var tokens = lexer.GetTokens();
+
+            var parser = new TempusParser(tokens);
+            var program = parser.ParseStatements();
+
+            var assemblyGenerator = new AssemblyGenerator(program, "Program.exe");
+        }
+
+        private static void OldTestStuff()
+        {
             var tokens = new List<Token> 
             {
                 new Token { Type = TokenType.Identifier, Value = "a" },
@@ -74,7 +90,7 @@ namespace Compiler
                 new Token { Type = TokenType.Plus, Value = "+" },
                 new Token { Type = TokenType.Identifier, Value = "10" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.Var, Value = "var" },
                 new Token { Type = TokenType.Identifier, Value = "a" },
                 new Token { Type = TokenType.Assignment, Value = "=" },
@@ -87,7 +103,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "70" },
                 new Token { Type = TokenType.Asterisk, Value = "*" },
                 new Token { Type = TokenType.Identifier, Value = "70" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
                 new Token { Type = TokenType.EOF },
             };
 
@@ -105,7 +121,7 @@ namespace Compiler
                 new Token { Type = TokenType.Comma, Value = "," },
                 new Token { Type = TokenType.Identifier, Value = "arg3" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.Var, Value = "var" },
                 new Token { Type = TokenType.Identifier, Value = "a" },
                 new Token { Type = TokenType.Assignment, Value = "=" },
@@ -118,7 +134,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "70" },
                 new Token { Type = TokenType.Asterisk, Value = "*" },
                 new Token { Type = TokenType.Identifier, Value = "70" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
                 new Token { Type = TokenType.EOF },
             };
 
@@ -136,7 +152,7 @@ namespace Compiler
                 new Token { Type = TokenType.Comma, Value = "," },
                 new Token { Type = TokenType.Identifier, Value = "arg3" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.Var, Value = "var" },
                 new Token { Type = TokenType.Identifier, Value = "a" },
                 new Token { Type = TokenType.Assignment, Value = "=" },
@@ -155,7 +171,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "arg2" },
                 new Token { Type = TokenType.Plus, Value = "+" },
                 new Token { Type = TokenType.Identifier, Value = "arg3" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
                 new Token { Type = TokenType.EOF },
             };
 
@@ -187,10 +203,10 @@ namespace Compiler
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.IntegerLiteral, Value = "10" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.PrinLn, Value = "println" },
                 new Token { Type = TokenType.Identifier, Value = "myString" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
                 new Token { Type = TokenType.EOF },
             };
 
@@ -208,7 +224,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "main" },
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.Identifier, Value = "myField" },
                 new Token { Type = TokenType.Assignment, Value = "=" },
                 new Token { Type = TokenType.StringLiteral, Value = "Hello World From Field!" },
@@ -216,11 +232,11 @@ namespace Compiler
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.IntegerLiteral, Value = "10" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.PrinLn, Value = "println" },
                 new Token { Type = TokenType.Identifier, Value = "myField" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
                 new Token { Type = TokenType.EOF },
             };
 
@@ -239,7 +255,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "printField" },
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
 
                 new Token { Type = TokenType.Var, Value = "var" },
                 new Token { Type = TokenType.Identifier, Value = "result" },
@@ -271,13 +287,13 @@ namespace Compiler
                 new Token { Type = TokenType.PrinLn, Value = "println" },
                 new Token { Type = TokenType.Identifier, Value = "result" },
 
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
 
                 new Token { Type = TokenType.Func, Value = "func" },
                 new Token { Type = TokenType.Identifier, Value = "main" },
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Left_Curly_Bracket, Value = "{" },
                 new Token { Type = TokenType.Identifier, Value = "myField" },
                 new Token { Type = TokenType.Assignment, Value = "=" },
                 new Token { Type = TokenType.StringLiteral, Value = "Hello World From Field!" },
@@ -285,7 +301,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "printField" },
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Right_Curly_Bracket, Value = "}" },
 
                 new Token { Type = TokenType.EOF },
             };
@@ -293,8 +309,6 @@ namespace Compiler
             var programParser4 = new TempusParser(program4);
             var programAst4 = programParser4.ParseStatements();
             var codeGenerator4 = new AssemblyGenerator(programAst4, "Tempus2.exe");
-
-            #endregion stuff
         }
     }
 }

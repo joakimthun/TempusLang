@@ -32,16 +32,16 @@ namespace Parsing.Parselets
 
             parser.Consume();
 
-            if (!parser.Match(TokenType.Left_Bracket))
+            if (!parser.Match(TokenType.Left_Curly_Bracket))
             {
                 throw new ParsingException(string.Format("Expected opening bracket, found: {0}", parser.Lookahead.Type));
             }
 
             parser.Consume();
 
-            loopExpression.Body = parser.ParseStatements(TokenType.Right_Bracket);
+            loopExpression.Body = parser.ParseStatements(TokenType.Right_Curly_Bracket);
 
-            if (!parser.Match(TokenType.Right_Bracket))
+            if (!parser.Match(TokenType.Right_Curly_Bracket))
             {
                 throw new ParsingException(string.Format("Expected closing bracket, found: {0}", parser.Lookahead.Type));
             }

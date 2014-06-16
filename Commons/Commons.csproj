@@ -56,6 +56,7 @@
     <Compile Include="AST\Expression.cs" />
     <Compile Include="Exceptions\CodeGenerationException.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
+    <Compile Include="Lexing\LanguageToken.cs" />
     <Compile Include="Lexing\Token.cs" />
     <Compile Include="Lexing\TokenType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

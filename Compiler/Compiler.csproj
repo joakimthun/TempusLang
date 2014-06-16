@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="TempusCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +55,10 @@
     <ProjectReference Include="..\Commons\Commons.csproj">
       <Project>{b2cef4c0-7918-48af-ac63-9623525479b7}</Project>
       <Name>Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lexing\Lexing.csproj">
+      <Project>{5c2047ba-0437-4267-b30e-ba9b954eaaeb}</Project>
+      <Name>Lexing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Parsing\Parsing.csproj">
       <Project>{8121eab0-dd4d-4d46-ba80-60ff6775d726}</Project>

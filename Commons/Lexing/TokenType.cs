@@ -10,25 +10,32 @@ namespace Commons.Lexing
     {
         None,
         EOF,
-        Identifier,
-        Assignment,
+
+        // Key words
+        Var,
+        PrinLn,
+        Loop,
+        Func,
+        Global,
+        Return,
+
+        // Literals
+        IntegerLiteral,
+        StringLiteral,
+
+        // Binary operators
         Plus,
         Minus,
         Asterisk,
         Slash,
-        Var,
-        PrinLn,
-        Loop,
+
+        Identifier,
+        Assignment,
         Left_Paren,
         Right_Paren,
-        Left_Bracket,
-        Right_Bracket,
-        Func,
+        Left_Curly_Bracket,
+        Right_Curly_Bracket,
         Comma,
         Colon,
-        Return,
-        IntegerLiteral,
-        StringLiteral,
-        Global,
     }
 }
