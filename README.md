@@ -10,7 +10,7 @@ func printField()
 	}
 }
 
-func mainFunc() : main
+func main()
 {
 	strField = "Hello World!"
 	printField()

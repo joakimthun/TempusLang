@@ -9,24 +9,12 @@ using System.Threading.Tasks;
 
 namespace Parsing.Parselets
 {
-    public class FuncParselet : StatementParselet
+    public class FuncInvocationParselet : StatementParselet
     {
         public override Expression Parse(Parser parser)
         {
-            parser.Consume();
-
-            if (!parser.Match(TokenType.Identifier))
-            {
-                throw new ParsingException(string.Format("Expected identifier, found: {0}", parser.Lookahead.Type));
-            }
-
-            var funcExpression = new FuncDeclarationExpression();
-            funcExpression.Name = parser.Lookahead.Value;
-
-            if (funcExpression.Name == "main")
-            {
-                funcExpression.IsMain = true;
-            }
+            var funcInvocationExpression = new FuncInvocationExpression();
+            funcInvocationExpression.Name = parser.Lookahead.Value;
 
             parser.Consume();
 
@@ -57,7 +45,7 @@ namespace Parsing.Parselets
                     parser.Consume();
                 }
 
-                funcExpression.Arguments = arguments;
+                funcInvocationExpression.Arguments = arguments;
             }
 
             if (!parser.Match(TokenType.Right_Paren))
@@ -67,24 +55,8 @@ namespace Parsing.Parselets
 
             parser.Consume();
 
-            if (!parser.Match(TokenType.Left_Bracket))
-            {
-                throw new ParsingException(string.Format("Expected opening bracket, found: {0}", parser.Lookahead.Type));
-            }
 
-            parser.Consume();
-
-            funcExpression.Body = parser.ParseStatements(TokenType.Right_Bracket);
-
-            if (!parser.Match(TokenType.Right_Bracket))
-            {
-                throw new ParsingException(string.Format("Expected closing bracket, found: {0}", parser.Lookahead.Type));
-            }
-
-            parser.Consume();
-
-
-            return funcExpression;
+            return funcInvocationExpression;
         }
     }
 }

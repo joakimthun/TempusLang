@@ -17,7 +17,7 @@ namespace Parsing
             RegisterLl1Parselet(TokenType.Loop, new LoopParselet());
             RegisterLl1Parselet(TokenType.Func, new FuncParselet());
             RegisterLl1Parselet(TokenType.Return, new ReturnParselet());
-            RegisterLl1Parselet(TokenType.Global, new PropertyDeclarationParselet());
+            RegisterLl1Parselet(TokenType.Global, new FieldDeclarationParselet());
 
             RegisterLl2Parselet(TokenType.Identifier, TokenType.Left_Paren, new FuncInvocationParselet());
 

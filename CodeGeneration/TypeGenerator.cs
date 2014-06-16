@@ -47,9 +47,9 @@ namespace CodeGeneration
 
         private void CompileStatement(Expression statement)
         {
-            if (statement is PropertyDeclarationExpression)
+            if (statement is FieldDeclarationExpression)
             {
-                var fieldDeclarationExpression = (PropertyDeclarationExpression) statement;
+                var fieldDeclarationExpression = (FieldDeclarationExpression)statement;
                 DefineField(fieldDeclarationExpression.Identifier, fieldDeclarationExpression.Type);
             }
             else if (statement is FuncDeclarationExpression)
