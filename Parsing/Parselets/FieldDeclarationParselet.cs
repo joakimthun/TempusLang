@@ -48,7 +48,7 @@ namespace Parsing.Parselets
                 case "int":
                     return typeof(int);
                 default:
-                    throw new ParsingException(string.Format("Unkown type: {0}", token.Value));
+                    throw new ParsingException(string.Format("Unknown type: {0}", token.Value));
             }
         }
     }

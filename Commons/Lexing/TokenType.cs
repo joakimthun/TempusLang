@@ -30,6 +30,5 @@ namespace Commons.Lexing
         IntegerLiteral,
         StringLiteral,
         Global,
-        Main
     }
 }

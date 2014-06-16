@@ -1,4 +1,5 @@
 ﻿using CodeGeneration;
+using Commons.AST;
 using Commons.Lexing;
 using Parsing;
 using System;
@@ -13,6 +14,9 @@ namespace Compiler
     {
         static void Main(string[] args)
         {
+
+            #region stuff
+
             var tokens = new List<Token> 
             {
                 new Token { Type = TokenType.Identifier, Value = "a" },
@@ -236,14 +240,37 @@ namespace Compiler
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
                 new Token { Type = TokenType.Left_Bracket, Value = "{" },
-                new Token { Type = TokenType.Loop, Value = "loop" },
-                new Token { Type = TokenType.Left_Paren, Value = "(" },
+
+                new Token { Type = TokenType.Var, Value = "var" },
+                new Token { Type = TokenType.Identifier, Value = "result" },
+                new Token { Type = TokenType.Assignment, Value = "=" },
                 new Token { Type = TokenType.IntegerLiteral, Value = "10" },
-                new Token { Type = TokenType.Right_Paren, Value = ")" },
-                new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                new Token { Type = TokenType.Asterisk, Value = "*" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "5" },
+                new Token { Type = TokenType.Plus, Value = "+" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "5" },
+                new Token { Type = TokenType.Slash, Value = "/" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "6" },
+                new Token { Type = TokenType.Asterisk, Value = "*" },
+                new Token { Type = TokenType.IntegerLiteral, Value = "66" },
+
+                //new Token { Type = TokenType.Loop, Value = "loop" },
+                //new Token { Type = TokenType.Left_Paren, Value = "(" },
+                //new Token { Type = TokenType.IntegerLiteral, Value = "10" },
+                //new Token { Type = TokenType.Right_Paren, Value = ")" },
+                //new Token { Type = TokenType.Left_Bracket, Value = "{" },
+                //
+                //new Token { Type = TokenType.PrinLn, Value = "println" },
+                //new Token { Type = TokenType.Identifier, Value = "myField" },
+                //
+                //new Token { Type = TokenType.PrinLn, Value = "println" },
+                //new Token { Type = TokenType.Identifier, Value = "index" },
+                //
+                //new Token { Type = TokenType.Right_Bracket, Value = "}" },
+
                 new Token { Type = TokenType.PrinLn, Value = "println" },
-                new Token { Type = TokenType.Identifier, Value = "myField" },
-                new Token { Type = TokenType.Right_Bracket, Value = "}" },
+                new Token { Type = TokenType.Identifier, Value = "result" },
+
                 new Token { Type = TokenType.Right_Bracket, Value = "}" },
 
                 new Token { Type = TokenType.Func, Value = "func" },
@@ -254,6 +281,7 @@ namespace Compiler
                 new Token { Type = TokenType.Identifier, Value = "myField" },
                 new Token { Type = TokenType.Assignment, Value = "=" },
                 new Token { Type = TokenType.StringLiteral, Value = "Hello World From Field!" },
+
                 new Token { Type = TokenType.Identifier, Value = "printField" },
                 new Token { Type = TokenType.Left_Paren, Value = "(" },
                 new Token { Type = TokenType.Right_Paren, Value = ")" },
@@ -265,6 +293,8 @@ namespace Compiler
             var programParser4 = new TempusParser(program4);
             var programAst4 = programParser4.ParseStatements();
             var codeGenerator4 = new AssemblyGenerator(programAst4, "Tempus2.exe");
+
+            #endregion stuff
         }
     }
 }

@@ -16,6 +16,7 @@ namespace CodeGeneration
         //.NET Methods
         private const string SystemConsoleWriteLine = "WriteLine";
         private const string SystemConsoleReadLine = "ReadLine";
+        private const string ObjectToString = "ToString";
 
         private ILGenerator _ilGenerator;
         private Dictionary<string, LocalBuilder> _localTable;
@@ -71,9 +72,9 @@ namespace CodeGeneration
             else if (statement is AssignmentExpression)
             {
                 var assignmentExpression = (AssignmentExpression)statement;
-                var typeOfExpression = TypeOfExpression(assignmentExpression.Expression);
-                CompileExpression(assignmentExpression.Expression, typeOfExpression);
+                CompileExpression(assignmentExpression.Expression);
 
+                var typeOfExpression = TypeOfExpression(assignmentExpression.Expression);
                 if (_localTable.ContainsKey(assignmentExpression.Identifier))
                 {
                     StoreLocal(assignmentExpression.Identifier, typeOfExpression);
@@ -110,13 +111,13 @@ namespace CodeGeneration
 
                 //Increment the index variable by 1
                 _ilGenerator.Emit(OpCodes.Ldloc, _localTable[loopIndexExpression.Identifier]);
-                _ilGenerator.Emit(OpCodes.Ldc_I4, 1);
+                _ilGenerator.Emit(OpCodes.Ldc_I4_1);
                 _ilGenerator.Emit(OpCodes.Add);
                 StoreLocal(loopIndexExpression.Identifier, typeof(int));
 
                 _ilGenerator.MarkLabel(test);
                 _ilGenerator.Emit(OpCodes.Ldloc, _localTable[loopIndexExpression.Identifier]);
-                CompileExpression(loopExpression.IterationExpression, typeof(int));
+                CompileExpression(loopExpression.IterationExpression);
 
                 //Jump to the loopBody label if the loopIndex is less then the iteration expression.
                 _ilGenerator.Emit(OpCodes.Blt, loopBody);
@@ -138,15 +139,26 @@ namespace CodeGeneration
             }
         }
 
-        private void CompileExpression(Expression expression, Type expectedType)
+        private void CompileExpression(Expression expression, Type desiredType = null)
         {
-            if (expression is StringLiteralExpression)
+            Type actualType = null;
+
+            if (expression is BinaryOperatorExpression)
+            {
+                var binaryOperatorExpression = (BinaryOperatorExpression)expression;
+                CompileExpression(binaryOperatorExpression.Left);
+                CompileExpression(binaryOperatorExpression.Right);
+                _ilGenerator.Emit(GetOperatorInstruction(binaryOperatorExpression.Operator));
+            }
+            else if (expression is StringLiteralExpression)
             {
                 _ilGenerator.Emit(OpCodes.Ldstr, ((StringLiteralExpression)expression).Value);
+                actualType = typeof(string);
             }
             else if (expression is IntegerLiteralExpression)
             {
                 _ilGenerator.Emit(OpCodes.Ldc_I4, ((IntegerLiteralExpression)expression).Value);
+                actualType = typeof(int);
             }
             else if (expression is IdentifierExpression)
             {
@@ -154,11 +166,15 @@ namespace CodeGeneration
 
                 if (_localTable.ContainsKey(identifier))
                 {
-                    _ilGenerator.Emit(OpCodes.Ldloc, _localTable[identifier]);
+                    var local = _localTable[identifier];
+                    _ilGenerator.Emit(OpCodes.Ldloc, local);
+                    actualType = local.LocalType;
                 }
                 else if (_fieldTable.ContainsKey(identifier))
                 {
-                    _ilGenerator.Emit(OpCodes.Ldsfld, _fieldTable[identifier]);
+                    var field = _fieldTable[identifier];
+                    _ilGenerator.Emit(OpCodes.Ldsfld, field);
+                    actualType = field.FieldType;
                 }
                 else
                 {
@@ -168,6 +184,25 @@ namespace CodeGeneration
             else
             {
                 throw new CodeGenerationException(string.Format("Expression type not yet implemented: {0}", expression.GetType().Name));
+            }
+
+            CastToDesiredType(actualType, desiredType);
+        }
+
+        private void CastToDesiredType(Type actualType, Type desiredType)
+        {
+            if (actualType == null || desiredType == null || actualType == desiredType)
+                return;
+
+            if (actualType == typeof(int) && desiredType == typeof(string))
+            {
+                //Convert the integer value on top of the stack to an object reference so we can call it's ToString method.
+                _ilGenerator.Emit(OpCodes.Box, typeof(int));
+                _ilGenerator.Emit(OpCodes.Callvirt, typeof(object).GetMethod(ObjectToString));
+            }
+            else
+            {
+                throw new CodeGenerationException("Can only cast integers to strings.");
             }
         }
 
@@ -201,7 +236,11 @@ namespace CodeGeneration
 
         private Type TypeOfExpression(Expression expression)
         {
-            if (expression is StringLiteralExpression)
+            if (expression is BinaryOperatorExpression)
+            {
+                return typeof(int);
+            }
+            else if (expression is StringLiteralExpression)
             {
                 return typeof(string);
             }
