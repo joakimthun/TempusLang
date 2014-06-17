@@ -11,7 +11,7 @@ namespace Commons.Lexing
         None,
         EOF,
 
-        // Key words
+        // Keywords
         Var,
         PrinLn,
         Loop,
