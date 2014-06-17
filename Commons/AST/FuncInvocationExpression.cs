@@ -9,6 +9,6 @@ namespace Commons.AST
     public class FuncInvocationExpression : Expression
     {
         public string Name { get; set; }
-        public IEnumerable<IdentifierExpression> Arguments { get; set; }
+        public IEnumerable<Expression> Arguments { get; set; }
     }
 }

@@ -23,29 +23,33 @@ namespace Parsing.Parselets
                 throw new ParsingException(string.Format("Expected opening parentheses, found: {0}", parser.Lookahead.Type));
             }
 
-            parser.Consume();
+            var nextToken = parser.Peek(1);
 
-            if (parser.Match(TokenType.Identifier))
+            if (nextToken.Type != TokenType.Right_Paren)
             {
-                var arguments = new List<IdentifierExpression>();
-                arguments.Add(new IdentifierExpression { Identifier = parser.Lookahead.Value });
-                parser.Consume();
+                var arguments = new List<Expression>();
 
-                while (parser.Match(TokenType.Comma))
+                do
                 {
                     parser.Consume();
 
-                    if (!parser.Match(TokenType.Identifier))
+                    if (parser.Match(TokenType.Identifier))
                     {
-                        throw new ParsingException(string.Format("Expected identifier, found: {0}", parser.Lookahead.Type));
+                        arguments.Add(new IdentifierExpression { Identifier = parser.Lookahead.Value });
+                        parser.Consume();
                     }
-
-                    arguments.Add(new IdentifierExpression { Identifier = parser.Lookahead.Value });
-
-                    parser.Consume();
+                    else
+                    {
+                        arguments.Add(parser.ParseExpression());
+                    }
                 }
+                while (parser.Match(TokenType.Comma));
 
                 funcInvocationExpression.Arguments = arguments;
+            }
+            else
+            {
+                parser.Consume();
             }
 
             if (!parser.Match(TokenType.Right_Paren))

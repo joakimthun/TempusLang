@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Programs\Program2.tempus" />
+    <None Include="Programs\Program1.tempus" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeGeneration\CodeGeneration.csproj">

@@ -22,18 +22,22 @@ namespace CodeGeneration
         private Dictionary<string, LocalBuilder> _localTable;
         private Dictionary<string, FieldBuilder> _fieldTable;
         private Dictionary<string, MethodBuilder> _methodsTable;
+        private Dictionary<string, Tuple<OpCode, int, Type>> _methodArgumentsTable;
         private MethodBuilder _methodBuilder;
 
-        public MethodGenerator(IEnumerable<Expression> expressions, string name, bool isMain, TypeBuilder typeBuilder, Dictionary<string, FieldBuilder> fieldTable, Dictionary<string, MethodBuilder> methodsTable)
+        public MethodGenerator(FuncDeclarationExpression funcDeclarationExpression, string name, bool isMain, TypeBuilder typeBuilder, Dictionary<string, FieldBuilder> fieldTable, Dictionary<string, MethodBuilder> methodsTable)
         {
-            _methodBuilder = typeBuilder.DefineMethod(name, MethodAttributes.Static, typeof(void), Type.EmptyTypes);
+            var parameterTypes = funcDeclarationExpression.Arguments == null ? Type.EmptyTypes : funcDeclarationExpression.Arguments.Select(x => x.Type).ToArray();
+
+            _methodBuilder = typeBuilder.DefineMethod(name, MethodAttributes.Static, typeof(void), parameterTypes);
 
             _ilGenerator = _methodBuilder.GetILGenerator();
             _localTable = new Dictionary<string, LocalBuilder>();
             _fieldTable = fieldTable;
             _methodsTable = methodsTable;
+            _methodArgumentsTable = GetMethodArgumentsTable(funcDeclarationExpression.Arguments);
 
-            CompileStatements(expressions);
+            CompileStatements(funcDeclarationExpression.Body);
 
             if (isMain)
             {
@@ -50,6 +54,9 @@ namespace CodeGeneration
 
         private void CompileStatements(IEnumerable<Expression> statements)
         {
+            if (statements == null)
+                return;
+
             foreach (var statement in statements)
             {
                 CompileStatement(statement);
@@ -131,6 +138,14 @@ namespace CodeGeneration
                     throw new CodeGenerationException(string.Format("Can not call undeclared function: {0}", funcInvocationExpression.Name));
                 }
 
+                if(funcInvocationExpression.Arguments != null)
+                {
+                    foreach (var argument in funcInvocationExpression.Arguments)
+                    {
+                        CompileExpression(argument);
+                    }
+                }
+
                 _ilGenerator.Emit(OpCodes.Call, _methodsTable[funcInvocationExpression.Name]);
             }
             else
@@ -169,6 +184,12 @@ namespace CodeGeneration
                     var local = _localTable[identifier];
                     _ilGenerator.Emit(OpCodes.Ldloc, local);
                     actualType = local.LocalType;
+                }
+                else if (_methodArgumentsTable.ContainsKey(identifier))
+                {
+                    var argument = _methodArgumentsTable[identifier];
+                    _ilGenerator.Emit(argument.Item1, argument.Item2);
+                    actualType = argument.Item3;
                 }
                 else if (_fieldTable.ContainsKey(identifier))
                 {
@@ -273,6 +294,22 @@ namespace CodeGeneration
             variableDeclarationExpression.Identifier = "index";
             variableDeclarationExpression.Expression = new IntegerLiteralExpression { Value = 0 };
             return variableDeclarationExpression;
+        }
+
+        private Dictionary<string, Tuple<OpCode, int, Type>> GetMethodArgumentsTable(IEnumerable<ArgumentExpression> arguments)
+        {
+            var argumentsTable = new Dictionary<string, Tuple<OpCode, int, Type>>();
+
+            if (arguments == null)
+                return argumentsTable;
+
+            var argumentsList = arguments.ToList();
+            foreach (var argument in argumentsList)
+            {
+                argumentsTable.Add(argument.Identifier, new Tuple<OpCode, int, Type>(OpCodes.Ldarg, argumentsList.IndexOf(argument), argument.Type));
+            }
+
+            return argumentsTable;
         }
     }
 }

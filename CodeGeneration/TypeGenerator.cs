@@ -55,7 +55,7 @@ namespace CodeGeneration
             else if (statement is FuncDeclarationExpression)
             {
                 var funcDeclarationExpression = (FuncDeclarationExpression) statement;
-                var methodGenerator = new MethodGenerator(funcDeclarationExpression.Body, funcDeclarationExpression.Name, funcDeclarationExpression.IsMain, _typeBuilder, _fieldTable, _methodsTable);
+                var methodGenerator = new MethodGenerator(funcDeclarationExpression, funcDeclarationExpression.Name, funcDeclarationExpression.IsMain, _typeBuilder, _fieldTable, _methodsTable);
 
                 if (funcDeclarationExpression.IsMain)
                 {

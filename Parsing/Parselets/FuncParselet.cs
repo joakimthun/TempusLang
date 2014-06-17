@@ -35,15 +35,13 @@ namespace Parsing.Parselets
                 throw new ParsingException(string.Format("Expected opening parentheses, found: {0}", parser.Lookahead.Type));
             }
 
-            parser.Consume();
+            var nextToken = parser.Peek(1);
 
-            if (parser.Match(TokenType.Identifier))
+            if (nextToken.Type != TokenType.Right_Paren)
             {
-                var arguments = new List<IdentifierExpression>();
-                arguments.Add(new IdentifierExpression { Identifier = parser.Lookahead.Value });
-                parser.Consume();
+                var arguments = new List<ArgumentExpression>();
 
-                while (parser.Match(TokenType.Comma))
+                do
                 {
                     parser.Consume();
 
@@ -52,12 +50,37 @@ namespace Parsing.Parselets
                         throw new ParsingException(string.Format("Expected identifier, found: {0}", parser.Lookahead.Type));
                     }
 
-                    arguments.Add(new IdentifierExpression { Identifier = parser.Lookahead.Value });
+                    var argumentExpression = new ArgumentExpression();
+                    argumentExpression.Identifier = parser.Lookahead.Value;
 
                     parser.Consume();
+
+                    if (!parser.Match(TokenType.Colon))
+                    {
+                        throw new ParsingException(string.Format("Expected colon, found: {0}", parser.Lookahead.Type));
+                    }
+
+                    parser.Consume();
+
+                    if (!parser.Match(TokenType.Identifier))
+                    {
+                        throw new ParsingException(string.Format("Expected type identifier, found: {0}", parser.Lookahead.Type));
+                    }
+
+                    argumentExpression.Type = GetArgumentType(parser.Lookahead);
+
+                    arguments.Add(argumentExpression);
+
+                    parser.Consume();
+
                 }
+                while (parser.Match(TokenType.Comma));
 
                 funcExpression.Arguments = arguments;
+            }
+            else
+            {
+                parser.Consume();
             }
 
             if (!parser.Match(TokenType.Right_Paren))
@@ -74,7 +97,10 @@ namespace Parsing.Parselets
 
             parser.Consume();
 
-            funcExpression.Body = parser.ParseStatements(TokenType.Right_Curly_Bracket);
+            if (!parser.Match(TokenType.Right_Curly_Bracket))
+            {
+                funcExpression.Body = parser.ParseStatements(TokenType.Right_Curly_Bracket);
+            }
 
             if (!parser.Match(TokenType.Right_Curly_Bracket))
             {
@@ -85,6 +111,19 @@ namespace Parsing.Parselets
 
 
             return funcExpression;
+        }
+
+        private Type GetArgumentType(Token token)
+        {
+            switch (token.Value)
+            {
+                case "string":
+                    return typeof(string);
+                case "int":
+                    return typeof(int);
+                default:
+                    throw new ParsingException(string.Format("Unknown type: {0}", token.Value));
+            }
         }
     }
 }

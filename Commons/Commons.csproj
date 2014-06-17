@@ -42,6 +42,7 @@
     <Compile Include="AST\FuncInvocationExpression.cs" />
     <Compile Include="AST\FuncDeclarationExpression.cs" />
     <Compile Include="AST\FieldDeclarationExpression.cs" />
+    <Compile Include="AST\ArgumentExpression.cs" />
     <Compile Include="AST\StringLiteralExpression.cs" />
     <Compile Include="AST\IntegerLiteralExpression.cs" />
     <Compile Include="AST\LoopExpression.cs" />

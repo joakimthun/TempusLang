@@ -14,13 +14,19 @@ namespace Compiler
 {
     class TempusCompiler
     {
-        const string SuperHardCodedFilePath = @"C:\Dev\Tempus\Program.tempus";
+        const string SuperHardCodedFilePath = @"C:\Dev\Tempus\Compiler\Programs\Program{0}.tempus";
 
         static void Main(string[] args)
         {
             //OldTestStuff();
+            //CompileProgram(1);
+            CompileProgram(2);
+            
+        }
 
-            string input = File.ReadAllText(SuperHardCodedFilePath);
+        static void CompileProgram(int number)
+        {
+            string input = File.ReadAllText(string.Format(SuperHardCodedFilePath, number));
 
             var lexer = new Lexer(input);
             var tokens = lexer.GetTokens();
@@ -28,7 +34,7 @@ namespace Compiler
             var parser = new TempusParser(tokens);
             var program = parser.ParseStatements();
 
-            var assemblyGenerator = new AssemblyGenerator(program, "Program.exe");
+            var assemblyGenerator = new AssemblyGenerator(program, string.Format("Program{0}.exe", number));
         }
 
         private static void OldTestStuff()

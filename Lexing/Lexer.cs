@@ -141,7 +141,7 @@ namespace Lexing
                 new LanguageToken
                 {
                     Type = TokenType.Identifier,
-                    Regex = new Regex("[a-z]+([a-zA-Z]+)?"),
+                    Regex = new Regex("[a-z]+([a-zA-Z0-9]+)?"),
                 },
                 new LanguageToken
                 {
