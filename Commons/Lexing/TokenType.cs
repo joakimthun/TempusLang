@@ -18,6 +18,8 @@ namespace Commons.Lexing
         Func,
         Global,
         Return,
+        If,
+        Else,
 
         // Literals
         IntegerLiteral,
@@ -30,6 +32,7 @@ namespace Commons.Lexing
         Slash,
 
         Identifier,
+        EqualityOp,
         Assignment,
         Left_Paren,
         Right_Paren,

@@ -20,7 +20,8 @@ namespace Compiler
         {
             //OldTestStuff();
             //CompileProgram(1);
-            CompileProgram(2);
+            //CompileProgram(2);
+            CompileProgram(3);
             
         }
 

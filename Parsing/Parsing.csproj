@@ -42,6 +42,7 @@
     <Compile Include="Parselets\BinaryOperatorParselet.cs" />
     <Compile Include="Parselets\AssignmentParselet.cs" />
     <Compile Include="Parselets\FuncInvocationParselet.cs" />
+    <Compile Include="Parselets\ConditionalStatementParselet.cs" />
     <Compile Include="Parselets\StringLiteralParselet.cs" />
     <Compile Include="Parselets\IntegerLiteralParselet.cs" />
     <Compile Include="Parselets\InfixParselet.cs" />

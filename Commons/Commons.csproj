@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AST\ConditionalStatementExpression.cs" />
     <Compile Include="AST\FuncInvocationExpression.cs" />
     <Compile Include="AST\FuncDeclarationExpression.cs" />
     <Compile Include="AST\FieldDeclarationExpression.cs" />

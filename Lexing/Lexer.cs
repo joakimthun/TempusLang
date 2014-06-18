@@ -109,6 +109,16 @@ namespace Lexing
                 },
                 new LanguageToken
                 {
+                    Type = TokenType.If,
+                    Regex = new Regex("if"),
+                },
+                new LanguageToken
+                {
+                    Type = TokenType.Else,
+                    Regex = new Regex("else"),
+                },
+                new LanguageToken
+                {
                     Type = TokenType.IntegerLiteral,
                     Regex = new Regex("[0-9]+"),
                 },
@@ -142,6 +152,11 @@ namespace Lexing
                 {
                     Type = TokenType.Identifier,
                     Regex = new Regex("[a-z]+([a-zA-Z0-9]+)?"),
+                },
+                new LanguageToken
+                {
+                    Type = TokenType.EqualityOp,
+                    Regex = new Regex("=="),
                 },
                 new LanguageToken
                 {

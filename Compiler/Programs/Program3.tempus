@@ -1,0 +1,16 @@
+func conditionalStatement(arg:int)
+{
+	if(1 == arg)
+	{
+		println 'true'
+	}
+	else
+	{
+		println 'false'
+	}
+}
+
+func main()
+{
+	conditionalStatement(1)
+)
