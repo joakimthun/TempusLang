@@ -39,7 +39,10 @@ namespace Parsing.Parselets
 
             parser.Consume();
 
-            loopExpression.Body = parser.ParseStatements(TokenType.Right_Curly_Bracket);
+            if (!parser.Match(TokenType.Right_Curly_Bracket))
+            {
+                loopExpression.Body = parser.ParseStatements(TokenType.Right_Curly_Bracket);
+            }
 
             if (!parser.Match(TokenType.Right_Curly_Bracket))
             {

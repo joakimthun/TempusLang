@@ -1,5 +1,3 @@
-Example program:
-```
 global strField : string
 
 func printField()
@@ -43,4 +41,3 @@ func main()
     printArguments('Hello world!', 10, 10 + 10 * 5)
     conditionalStatement(0)
 }
-```

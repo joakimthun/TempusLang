@@ -148,6 +148,24 @@ namespace CodeGeneration
 
                 _ilGenerator.Emit(OpCodes.Call, _methodsTable[funcInvocationExpression.Name]);
             }
+            else if (statement is ConditionalStatementExpression)
+            {
+                var conditionalStatementExpression = (ConditionalStatementExpression)statement;
+
+                var elseBody = _ilGenerator.DefineLabel();
+                var end = _ilGenerator.DefineLabel();
+
+                CompileExpression(conditionalStatementExpression.Condition);
+                _ilGenerator.Emit(OpCodes.Brfalse, elseBody);
+
+                CompileStatements(conditionalStatementExpression.IfBody);
+                _ilGenerator.Emit(OpCodes.Br, end);
+
+                _ilGenerator.MarkLabel(elseBody);
+                CompileStatements(conditionalStatementExpression.ElseBody);
+
+                _ilGenerator.MarkLabel(end);
+            }
             else
             {
                 throw new CodeGenerationException(string.Format("Statement type not yet implemented: {0}", statement.GetType().Name));

@@ -32,6 +32,7 @@ namespace Parsing
             RegisterLeftAssociativeInfixParselet(TokenType.Minus, Precedence.Sum);
             RegisterLeftAssociativeInfixParselet(TokenType.Asterisk, Precedence.Product);
             RegisterLeftAssociativeInfixParselet(TokenType.Slash, Precedence.Product);
+            RegisterLeftAssociativeInfixParselet(TokenType.EqualityOp, Precedence.Comparison);
         }
 
         private void RegisterLeftAssociativeInfixParselet(TokenType tokenType, int precedence)

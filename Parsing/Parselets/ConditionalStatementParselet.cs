@@ -23,8 +23,57 @@ namespace Parsing.Parselets
             parser.Consume();
 
             var conditionalStatementExpression = new ConditionalStatementExpression();
+            conditionalStatementExpression.Condition = parser.ParseExpression();
 
-            throw new ParsingException("Conditional statements are not yet supported :(");
+            if (!parser.Match(TokenType.Right_Paren))
+            {
+                throw new ParsingException(string.Format("Expected closing parentheses, found: {0}", parser.Lookahead.Type));
+            }
+
+            parser.Consume();
+
+            if (!parser.Match(TokenType.Left_Curly_Bracket))
+            {
+                throw new ParsingException(string.Format("Expected opening bracket, found: {0}", parser.Lookahead.Type));
+            }
+
+            parser.Consume();
+
+            if (!parser.Match(TokenType.Right_Curly_Bracket))
+            {
+                conditionalStatementExpression.IfBody = parser.ParseStatements(TokenType.Right_Curly_Bracket);
+            }
+
+            if (!parser.Match(TokenType.Right_Curly_Bracket))
+            {
+                throw new ParsingException(string.Format("Expected closing bracket, found: {0}", parser.Lookahead.Type));
+            }
+
+            parser.Consume();
+
+            if (parser.Match(TokenType.Else))
+            {
+                parser.Consume();
+
+                if (!parser.Match(TokenType.Left_Curly_Bracket))
+                {
+                    throw new ParsingException(string.Format("Expected opening bracket, found: {0}", parser.Lookahead.Type));
+                }
+
+                parser.Consume();
+
+                if (!parser.Match(TokenType.Right_Curly_Bracket))
+                {
+                    conditionalStatementExpression.ElseBody = parser.ParseStatements(TokenType.Right_Curly_Bracket);
+                }
+
+                if (!parser.Match(TokenType.Right_Curly_Bracket))
+                {
+                    throw new ParsingException(string.Format("Expected closing bracket, found: {0}", parser.Lookahead.Type));
+                }
+
+                parser.Consume();
+            }
 
             return conditionalStatementExpression;
         }

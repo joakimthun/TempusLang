@@ -1,6 +1,6 @@
 func conditionalStatement(arg:int)
 {
-	if(1 == arg)
+	if(arg == 1)
 	{
 		println 'true'
 	}
@@ -12,5 +12,5 @@ func conditionalStatement(arg:int)
 
 func main()
 {
-	conditionalStatement(1)
-)
+	conditionalStatement(0)
+}

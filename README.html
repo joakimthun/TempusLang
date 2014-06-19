@@ -23,11 +23,24 @@ global strField : string</p>
     println arg3
 }</p>
 
+<p>func conditionalStatement(arg:int)
+{
+    if(arg == 1)
+    {
+        println 'true'
+    }
+    else
+    {
+        println 'false'
+    }
+}</p>
+
 <p>func main()
 {
     strField = 'Hello World!'
     printField()
     printInteger()
     printArguments('Hello world!', 10, 10 + 10 * 5)
+    conditionalStatement(0)
 }
 ```</p>

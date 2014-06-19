@@ -19,9 +19,10 @@ namespace Compiler
         static void Main(string[] args)
         {
             //OldTestStuff();
-            //CompileProgram(1);
-            //CompileProgram(2);
+            CompileProgram(1);
+            CompileProgram(2);
             CompileProgram(3);
+            CompileProgram(4);
             
         }
 

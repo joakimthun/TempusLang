@@ -26,6 +26,8 @@ namespace CodeGeneration
                     return OpCodes.Add;
                 case TokenType.Minus:
                     return OpCodes.Sub;
+                case TokenType.EqualityOp:
+                    return OpCodes.Ceq;
                 default:
                     throw new CodeGenerationException(string.Format("Unknown operator: {0}", tokenType.ToString()));
             }

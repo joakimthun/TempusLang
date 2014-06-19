@@ -9,7 +9,8 @@ namespace Parsing.Parselets
     public static class Precedence
     {
         public const int Assignment = 1;
-        public const int Sum = 2;
-        public const int Product = 3;
+        public const int Comparison = 2;
+        public const int Sum = 3;
+        public const int Product = 4;
     }
 }
